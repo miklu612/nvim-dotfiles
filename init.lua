@@ -34,6 +34,12 @@ require("lazy").setup({
     {
         "nvim-treesitter/nvim-treesitter",
         opts = {
+            ensure_installed = {
+                "c",
+                "cpp",
+                "javascript",
+                "typescript",
+            },
             highlight = {
                 enable = true
             }
