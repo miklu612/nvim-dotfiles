@@ -23,6 +23,9 @@ require("lazy").setup({
         end
     },
     {
+        "ellisonleao/gruvbox.nvim",
+    },
+    {
         "neovim/nvim-lspconfig",
         config = function()
             require("lspconfig").clangd.setup({})
@@ -39,6 +42,15 @@ require("lazy").setup({
             require("nvim-treesitter.configs").setup(opts)
 	end
     },
+    {
+        "nvim-tree/nvim-tree.lua",
+        opts = {
+
+        },
+        config = function(_, opts) 
+            require("nvim-tree").setup(opts)
+        end
+    }
 })
 
 -- My options
@@ -52,3 +64,13 @@ vim.g.mapleader    = " "
 
 -- Keybindings
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
+vim.keymap.set("n", "<leader>ot", function() vim.cmd(":NvimTreeOpen") end)
+
+
+vim.api.nvim_create_autocmd({"FileType"}, {
+    pattern = {"typescriptreact",},
+    callback = function()
+        vim.opt.shiftwidth = 2
+    end
+})
+
