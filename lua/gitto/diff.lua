@@ -1,5 +1,8 @@
 local gitto_diff = {}
 
+-- Splits the given text into its lines
+-- @arg {string} text
+-- @return {string[]}
 function split_lines(text)
     local lines = {}
     for line in text:gmatch("[^\r\n]+") do
@@ -8,6 +11,8 @@ function split_lines(text)
     return lines
 end
 
+-- Replaces the current window's buffer with a diff page.
+-- @return {void}
 function gitto_diff.diff()
     local output = vim.system({"git", "--no-pager", "diff"}):wait()
     local lines = split_lines(output.stdout)
