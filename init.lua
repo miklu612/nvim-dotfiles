@@ -18,18 +18,9 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
     {
         "folke/tokyonight.nvim",
-        init = function()
-            vim.cmd.colorscheme("tokyonight")
-        end
     },
     {
         "ellisonleao/gruvbox.nvim",
-    },
-    {
-        "neovim/nvim-lspconfig",
-        config = function()
-            require("lspconfig").clangd.setup({})
-        end
     },
     {
         "nvim-treesitter/nvim-treesitter",
@@ -46,17 +37,26 @@ require("lazy").setup({
         },
         config = function(_, opts) 
             require("nvim-treesitter.configs").setup(opts)
-	end
-    },
-    {
-        "nvim-tree/nvim-tree.lua",
-        opts = {
-
-        },
-        config = function(_, opts) 
-            require("nvim-tree").setup(opts)
         end
-    }
+    },
+--    {
+--        "neovim/nvim-lspconfig",
+--        opts = {},
+--        config = function(_, opts) 
+--            require("lspconfig").rust_analyzer.setup({
+--                settings = {
+--                    ['rust-analyzer'] = {}
+--                }
+--            })
+--            require("lspconfig").clangd.setup({
+--                settings = {
+--                    cmd = {
+--                        "clangd",
+--                    }
+--                }
+--            })
+--        end
+--    },
 })
 
 -- My options
@@ -66,17 +66,10 @@ vim.opt.number     = true
 vim.opt.hlsearch   = false
 vim.opt.mouse      = ""
 vim.opt.textwidth  = 79
+vim.opt.signcolumn = "yes:1"
 vim.g.mapleader    = " "
+vim.g.netrw_banner = 0
 
--- Keybindings
+vim.cmd.colorscheme("gruvbox")
+
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
-vim.keymap.set("n", "<leader>ot", function() vim.cmd(":NvimTreeOpen") end)
-
-
-vim.api.nvim_create_autocmd({"FileType"}, {
-    pattern = {"typescriptreact",},
-    callback = function()
-        vim.opt.shiftwidth = 2
-    end
-})
-
