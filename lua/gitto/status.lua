@@ -12,9 +12,9 @@ function parse_status_message(message)
     }
 
     for line in message:gmatch("[^r\r\n]+") do
-        if line:sub(1,1) == " " and line:sub(2,2) == "M" then
+        if line:sub(1, 2) == " M" then
             table.insert(status.modified_files, line:sub(4))
-        elseif line:sub(1,1) == "?" and line:sub(2,2) == "?" then
+        elseif line:sub(1, 2) == "??" then
             table.insert(status.untracked_files, line:sub(4))
         end
     end
