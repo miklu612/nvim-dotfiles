@@ -58,6 +58,8 @@ require("lazy").setup({
 --    },
 })
 
+local gitto = require("gitto")
+
 -- My options
 vim.opt.expandtab  = true
 vim.opt.shiftwidth = 4
@@ -72,3 +74,4 @@ vim.g.netrw_banner = 0
 vim.cmd.colorscheme("gruvbox")
 
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
+vim.keymap.set("n", "<leader>og", gitto.status)
