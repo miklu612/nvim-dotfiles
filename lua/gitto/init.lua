@@ -6,11 +6,6 @@ local gitto = {
 
 function gitto.setup(opts)
     vim.api.nvim_create_user_command(
-        "GittoStatus",
-        gitto.status,
-        {}
-    )
-    vim.api.nvim_create_user_command(
         "GittoDiff",
         gitto.diff,
 	{}
