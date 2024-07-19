@@ -59,6 +59,7 @@ require("lazy").setup({
 })
 
 local gitto = require("gitto")
+gitto.setup()
 
 -- My options
 vim.opt.expandtab  = true
@@ -75,3 +76,4 @@ vim.cmd.colorscheme("gruvbox")
 
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
 vim.keymap.set("n", "<leader>og", gitto.status)
+vim.keymap.set("n", "<leader>od", gitto.diff)
