@@ -27,10 +27,12 @@ require("lazy").setup({
                 "cpp",
                 "javascript",
                 "typescript",
+                "lua",
+                "vimdoc",
             },
             highlight = {
-                enable = true
-            }
+                enable = true,
+            },
         },
         config = function(_, opts) 
             require("nvim-treesitter.configs").setup(opts)
