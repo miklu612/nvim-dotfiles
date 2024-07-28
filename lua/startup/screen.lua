@@ -89,7 +89,7 @@ return {
                     vim.cmd(":ene")
                 end,
                 opts = {
-                    position = "center"
+                    position = "center",
                 }
             },
             {
@@ -97,6 +97,16 @@ return {
                 val = "> Time Waster",
                 on_press = function()
                     vim.cmd(":e ~/.config/nvim/init.lua")
+                end,
+                opts = {
+                    position = "center",
+                }
+            },
+            {
+                type = "button",
+                val = "> Netrw",
+                on_press = function()
+                    vim.cmd.Explore()
                 end,
                 opts = {
                     position = "center"
