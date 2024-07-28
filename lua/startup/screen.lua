@@ -4,6 +4,11 @@
 -- [[| |\  |  __| (_) \ V /| | | | | | |]]
 -- [[|_| \_|\___|\___/ \_/ |_|_| |_| |_|]]
 
+
+vim.api.nvim_set_hl(0, "TitleBlue", {fg="#5BCFFA"})
+vim.api.nvim_set_hl(0, "TitleRed",  {fg="#F5ABB9"})
+vim.api.nvim_set_hl(0, "TitleWhite",  {fg="#FFFFFF"})
+
 return {
     config = {
         layout = {
@@ -17,7 +22,8 @@ return {
                     [[ _   _                 _           ]]
                 },
                 opts = {
-                    position = "center"
+                    position = "center",
+                    hl = "TitleBlue"
                 },
             },
             {
@@ -26,7 +32,8 @@ return {
                     [[| \ | | ___  _____   _(_)_ __ ___  ]]
                 },
                 opts = {
-                    position = "center"
+                    position = "center",
+                    hl = "TitleRed"
                 },
             },
             {
@@ -35,7 +42,8 @@ return {
                     [[|  \| |/ _ \/ _ \ \ / | | '_ ` _ \ ]]
                 },
                 opts = {
-                    position = "center"
+                    position = "center",
+                    hl = "TitleWhite"
                 },
             },
             {
@@ -44,7 +52,8 @@ return {
                     [[| |\  |  __| (_) \ V /| | | | | | |]]
                 },
                 opts = {
-                    position = "center"
+                    position = "center",
+                    hl = "TitleRed"
                 },
             },
             {
@@ -53,8 +62,21 @@ return {
                     [[|_| \_|\___|\___/ \_/ |_|_| |_| |_|]]
                 },
                 opts = {
-                    position = "center"
+                    position = "center",
+                    hl = "TitleBlue"
                 },
+            },
+            {
+                type = "text",
+                val = "Trans-pilled Text Editor",
+                opts = {
+                    position = "center",
+                    hl = {
+                        {"TitleBlue", 0, 12},
+                        {"TitleRed", 12, 18},
+                        {"TitleWhite", 18, -1},
+                    }
+                }
             },
             {
                 type = "padding",
