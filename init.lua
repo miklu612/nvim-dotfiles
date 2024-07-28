@@ -44,25 +44,26 @@ require("lazy").setup({
         config = function(_, opts)
             require("alpha").setup(require("startup.screen").config)
         end
-    }
---    {
---        "neovim/nvim-lspconfig",
---        opts = {},
---        config = function(_, opts) 
---            require("lspconfig").rust_analyzer.setup({
---                settings = {
---                    ['rust-analyzer'] = {}
---                }
---            })
---            require("lspconfig").clangd.setup({
---                settings = {
---                    cmd = {
---                        "clangd",
---                    }
---                }
---            })
---        end
---    },
+    },
+    {
+        "neovim/nvim-lspconfig",
+        opts = {},
+        enabled = false,
+        config = function(_, opts) 
+            require("lspconfig").rust_analyzer.setup({
+                settings = {
+                    ['rust-analyzer'] = {}
+                }
+            })
+            require("lspconfig").clangd.setup({
+                settings = {
+                    cmd = {
+                        "clangd",
+                    }
+                }
+            })
+        end
+    },
 })
 
 
