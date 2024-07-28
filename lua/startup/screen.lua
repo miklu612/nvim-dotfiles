@@ -84,7 +84,7 @@ return {
             },
             {
                 type = "button",
-                val = "[New File]",
+                val = "> New File",
                 on_press = function()
                     vim.cmd(":ene")
                 end,
@@ -94,7 +94,7 @@ return {
             },
             {
                 type = "button",
-                val = " [Time Waster]",
+                val = "> Time Waster",
                 on_press = function()
                     vim.cmd(":e ~/.config/nvim/init.lua")
                 end,

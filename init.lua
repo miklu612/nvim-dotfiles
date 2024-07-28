@@ -75,6 +75,7 @@ vim.opt.hlsearch   = false
 vim.opt.mouse      = ""
 vim.opt.textwidth  = 79
 vim.opt.signcolumn = "yes:1"
+vim.opt.cursorline = true
 vim.g.mapleader    = " "
 vim.g.netrw_banner = 0
 
