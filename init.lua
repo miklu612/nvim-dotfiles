@@ -42,7 +42,7 @@ require("lazy").setup({
         "goolord/alpha-nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function(_, opts)
-            require("alpha").setup(require("alpha.themes.startify").config)
+            require("alpha").setup(require("startup.screen").config)
         end
     }
 --    {
