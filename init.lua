@@ -38,6 +38,13 @@ require("lazy").setup({
             require("nvim-treesitter.configs").setup(opts)
         end
     },
+    {
+        "goolord/alpha-nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function(_, opts)
+            require("alpha").setup(require("alpha.themes.startify").config)
+        end
+    }
 --    {
 --        "neovim/nvim-lspconfig",
 --        opts = {},
@@ -58,8 +65,6 @@ require("lazy").setup({
 --    },
 })
 
-local gitto = require("gitto")
-gitto.setup()
 
 -- My options
 vim.opt.expandtab  = true
@@ -75,5 +80,3 @@ vim.g.netrw_banner = 0
 vim.cmd.colorscheme("gruvbox")
 
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
-vim.keymap.set("n", "<leader>og", gitto.status)
-vim.keymap.set("n", "<leader>od", gitto.diff)
