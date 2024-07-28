@@ -111,7 +111,25 @@ return {
                 opts = {
                     position = "center"
                 }
-            }
+            },
+            {
+                type = "padding",
+                val = 2
+            },
+            {
+                type = "text",
+                val = "Version: " .. 
+                    vim.version().major .. "." ..
+                    vim.version().minor .. "." ..
+                    vim.version().patch .. "-" ..
+                    vim.version().prerelease .. "-" ..
+                    vim.version().build
+                ,
+                opts = {
+                    position = "center",
+                    hl = "TitleBlue"
+                },
+            },
         }
     }
 }
