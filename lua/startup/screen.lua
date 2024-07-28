@@ -91,6 +91,16 @@ return {
                 opts = {
                     position = "center"
                 }
+            },
+            {
+                type = "button",
+                val = " [Time Waster]",
+                on_press = function()
+                    vim.cmd(":e ~/.config/nvim/init.lua")
+                end,
+                opts = {
+                    position = "center"
+                }
             }
         }
     }
