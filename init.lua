@@ -48,7 +48,7 @@ require("lazy").setup({
     {
         "neovim/nvim-lspconfig",
         opts = {},
-        enabled = false,
+        enabled = true,
         config = function(_, opts) 
             require("lspconfig").rust_analyzer.setup({
                 settings = {
