@@ -64,6 +64,13 @@ require("lazy").setup({
             })
         end
     },
+    {
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.8',
+        dependencies = {
+            'nvim-lua/plenary.nvim'
+        }
+    }
 })
 
 
@@ -81,4 +88,6 @@ vim.g.netrw_banner = 0
 
 vim.cmd.colorscheme("gruvbox")
 
+local telescope = require("telescope.builtin")
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
+vim.keymap.set("n", "<leader>of", function() telescope.live_grep() end)
