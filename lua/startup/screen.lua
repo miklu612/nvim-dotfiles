@@ -121,10 +121,7 @@ return {
                 val = "Version: " .. 
                     vim.version().major .. "." ..
                     vim.version().minor .. "." ..
-                    vim.version().patch .. "-" ..
-                    vim.version().prerelease .. "-" ..
-                    vim.version().build
-                ,
+                    vim.version().patch,
                 opts = {
                     position = "center",
                     hl = "TitleBlue"
