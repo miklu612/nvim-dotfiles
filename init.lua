@@ -20,6 +20,9 @@ require("lazy").setup({
         "ellisonleao/gruvbox.nvim",
     },
     {
+        "folke/tokyonight.nvim",
+    },
+    {
         "nvim-treesitter/nvim-treesitter",
         opts = {
             ensure_installed = {
@@ -86,7 +89,7 @@ vim.opt.cursorline = true
 vim.g.mapleader    = " "
 vim.g.netrw_banner = 0
 
-vim.cmd.colorscheme("gruvbox")
+vim.cmd.colorscheme("tokyonight-night")
 
 local telescope = require("telescope.builtin")
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
