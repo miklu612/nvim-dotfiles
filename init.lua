@@ -23,6 +23,15 @@ require("lazy").setup({
         "folke/tokyonight.nvim",
     },
     {
+        "nvim-lualine/lualine.nvim",
+        dependencies = {
+            'nvim-tree/nvim-web-devicons'
+        },
+        config = function()
+            require("lualine").setup()
+        end
+    },
+    {
         "nvim-treesitter/nvim-treesitter",
         opts = {
             ensure_installed = {
