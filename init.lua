@@ -67,11 +67,6 @@ require("lazy").setup({
                     local bufnr = args.buf
                     --local client = vim.lsp.get_client_by_id(args.data.client_id)
                     vim.bo[bufnr].completefunc = "v:lua.vim.lsp.omnifunc"
-                    vim.api.nvim_set_keymap("i", "<C-K>", "", {
-                        callback = function()
-                            vim.complete()
-                        end
-                    })
                 end
             })
             require("lspconfig").rust_analyzer.setup({
