@@ -108,6 +108,12 @@ require("lazy").setup({
             'nvim-lua/plenary.nvim'
         }
     },
+    {
+        "miklu612/gitto",
+        config = function()
+            require("gitto").setup({})
+        end
+    }
 })
 
 -- My options
