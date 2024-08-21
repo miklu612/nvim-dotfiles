@@ -118,7 +118,7 @@ return {
             },
             {
                 type = "text",
-                val = "Version: " .. 
+                val = "Version: " ..
                     vim.version().major .. "." ..
                     vim.version().minor .. "." ..
                     vim.version().patch,
