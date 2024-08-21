@@ -46,14 +46,14 @@ require("lazy").setup({
                 enable = true,
             },
         },
-        config = function(_, opts) 
+        config = function(_, opts)
             require("nvim-treesitter.configs").setup(opts)
         end
     },
     {
         "goolord/alpha-nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function(_, opts)
+        config = function()
             require("alpha").setup(require("startup.screen").config)
         end
     },
@@ -61,11 +61,11 @@ require("lazy").setup({
         "neovim/nvim-lspconfig",
         opts = {},
         enabled = true,
-        config = function(_, opts) 
+        config = function()
             vim.api.nvim_create_autocmd("LspAttach", {
                 callback = function(args)
                     local bufnr = args.buf
-                    local client = vim.lsp.get_client_by_id(args.data.client_id)
+                    --local client = vim.lsp.get_client_by_id(args.data.client_id)
                     vim.bo[bufnr].completefunc = "v:lua.vim.lsp.omnifunc"
                     vim.api.nvim_set_keymap("i", "<C-K>", "", {
                         callback = function()
