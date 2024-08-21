@@ -110,7 +110,6 @@ require("lazy").setup({
     },
 })
 
-
 -- My options
 vim.opt.expandtab   = true
 vim.opt.shiftwidth  = 4
@@ -120,7 +119,7 @@ vim.opt.mouse       = ""
 vim.opt.textwidth   = 79
 vim.opt.signcolumn  = "yes:1"
 vim.opt.cursorline  = true
-vim.opt.completeopt = "menu"
+vim.opt.completeopt = "menu,noinsert"
 vim.g.mapleader     = " "
 vim.g.netrw_banner  = 0
 
