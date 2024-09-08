@@ -13,7 +13,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-
 -- Plugins
 require("lazy").setup({
     {
@@ -67,6 +66,21 @@ require("lazy").setup({
                     local bufnr = args.buf
                     --local client = vim.lsp.get_client_by_id(args.data.client_id)
                     vim.bo[bufnr].completefunc = "v:lua.vim.lsp.omnifunc"
+                    -- copied from the nvim documentation. See 'compl-autocomplete'
+                    local triggers = {"."}
+                    vim.api.nvim_create_autocmd("InsertCharPre", {
+                        buffer = vim.api.nvim_get_current_buf(),
+                        callback = function()
+                            if vim.fn.pumvisible() == 1 or vim.fn.state("m") == "m" then
+                                return
+                            end
+                            local char = vim.v.char
+                            if vim.list_contains(triggers, char) then
+                                local key = vim.keycode("<C-x><C-u>")
+                                vim.api.nvim_feedkeys(key, "m", false)
+                            end
+                        end
+                    })
                 end
             })
             require("lspconfig").rust_analyzer.setup({
