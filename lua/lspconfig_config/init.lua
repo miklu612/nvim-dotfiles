@@ -30,13 +30,15 @@ return {
                 ['rust-analyzer'] = {}
             },
         })
-        require("lspconfig").clangd.setup({
-            settings = {
-                cmd = {
-                    "clangd",
-                }
-            },
-        })
+        if vim.fn.executable("clangd") == 1 then
+            require("lspconfig").clangd.setup({
+                settings = {
+                    cmd = {
+                        "clangd",
+                    }
+                },
+            })
+        end
         if vim.fn.executable("lua-language-server") == 1 then
             require("lspconfig").lua_ls.setup({
                 on_init = function(client)
