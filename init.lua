@@ -64,12 +64,6 @@ require("lazy").setup({
             'nvim-lua/plenary.nvim'
         }
     },
-    {
-        "miklu612/gitto",
-        config = function()
-            require("gitto").setup({})
-        end
-    }
 })
 
 -- My options
@@ -91,3 +85,13 @@ local telescope = require("telescope.builtin")
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
 vim.keymap.set("n", "<leader>of", function() telescope.live_grep() end)
 vim.keymap.set("n", "<C-c>", function() print("Skill issue") end)
+
+vim.api.nvim_create_autocmd({"BufWritePost"}, {
+    pattern = {"*.cpp", "*.hpp"},
+    callback = function(ev)
+        local view = vim.fn.winsaveview()
+        vim.system({"clang-format", "-i", ev.match}):wait()
+        vim.cmd(":e!")
+        vim.fn.winrestview(view)
+    end
+})
