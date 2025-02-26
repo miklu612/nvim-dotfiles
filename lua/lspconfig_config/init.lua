@@ -43,9 +43,9 @@ local function inject_completion_controls(items)
         vim.keymap.del("i", "<Down>")
         vim.keymap.del("i", "<Esc>")
         vim.keymap.del("i", "<Up>")
+        vim.keymap.del("i", "<Space>")
 
     end)
-
     vim.keymap.set("i", "<Esc>", function()
         if window ~= -1 then
             vim.api.nvim_win_close(window, true)
@@ -55,8 +55,24 @@ local function inject_completion_controls(items)
         vim.keymap.del("i", "<Down>")
         vim.keymap.del("i", "<Esc>")
         vim.keymap.del("i", "<Up>")
+        vim.keymap.del("i", "<Space>")
 
         local keys = vim.keycode("<Esc>")
+        vim.api.nvim_feedkeys(keys, "i", false)
+
+    end)
+    vim.keymap.set("i", "<Space>", function()
+        if window ~= -1 then
+            vim.api.nvim_win_close(window, true)
+            window = -1
+        end
+        vim.keymap.del("i", "<Enter>")
+        vim.keymap.del("i", "<Down>")
+        vim.keymap.del("i", "<Esc>")
+        vim.keymap.del("i", "<Up>")
+        vim.keymap.del("i", "<Space>")
+
+        local keys = vim.keycode("<Space>")
         vim.api.nvim_feedkeys(keys, "i", false)
 
     end)
@@ -112,6 +128,17 @@ return {
                     buffer = vim.api.nvim_get_current_buf(),
                     callback = function()
                         if vim.fn.pumvisible() == 1 or vim.fn.state("m") == "m" then
+                            return
+                        end
+
+
+                        local invalid_keys = {
+                            " ", "(", ")", "{", "}", "=",
+                            '"', "'", "+", "-", "=", "*",
+                            "/", "!", "<", "?", ">", "\\",
+                            "[", "]", "&", "%", "$", "#",
+                            "@" }
+                        if vim.list_contains(invalid_keys, vim.v.char) then
                             return
                         end
 
