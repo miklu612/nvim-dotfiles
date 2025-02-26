@@ -55,6 +55,10 @@ local function inject_completion_controls(items)
         vim.keymap.del("i", "<Down>")
         vim.keymap.del("i", "<Esc>")
         vim.keymap.del("i", "<Up>")
+
+        local keys = vim.keycode("<Esc>")
+        vim.api.nvim_feedkeys(keys, "i", false)
+
     end)
 end
 
@@ -104,8 +108,6 @@ return {
             callback = function(args)
                 local bufnr = args.buf
                 vim.bo[bufnr].completefunc = "v:lua.vim.lsp.omnifunc"
-                -- copied from the nvim documentation. See 'compl-autocomplete'
-                --local triggers = {"."}
                 vim.api.nvim_create_autocmd("InsertCharPre", {
                     buffer = vim.api.nvim_get_current_buf(),
                     callback = function()
