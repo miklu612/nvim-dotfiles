@@ -1,8 +1,6 @@
 
 local window = -1
 local buffer = -1
-local autocmd_id = -1
-
 
 local function inject_completion_controls(items)
     vim.keymap.set("i", "<Down>", function()
@@ -19,8 +17,10 @@ local function inject_completion_controls(items)
         local cursor = vim.api.nvim_win_get_cursor(window)
         local index = cursor[1]
 
-        vim.api.nvim_win_close(window, true)
-        window = -1
+        if window ~= -1 then
+            vim.api.nvim_win_close(window, true)
+            window = -1
+        end
 
         vim.api.nvim_buf_set_text(
             0,
@@ -46,10 +46,11 @@ local function inject_completion_controls(items)
 
     end)
 
-
     vim.keymap.set("i", "<Esc>", function()
-        vim.api.nvim_win_close(window, true)
-        window = -1
+        if window ~= -1 then
+            vim.api.nvim_win_close(window, true)
+            window = -1
+        end
         vim.keymap.del("i", "<Enter>")
         vim.keymap.del("i", "<Down>")
         vim.keymap.del("i", "<Esc>")
@@ -60,10 +61,8 @@ end
 local function completion_listbox(items)
 
     if window ~= -1 then
-        --vim.api.nvim_win_close(window, true)
-        --window = -1
         local entries = {}
-        for k, v in ipairs(items) do
+        for _, v in ipairs(items) do
             table.insert(entries, v.insertText)
         end
         vim.api.nvim_buf_set_lines(buffer, 0, -1, false, entries)
@@ -72,11 +71,12 @@ local function completion_listbox(items)
         buffer = vim.api.nvim_create_buf(false, true)
 
         local entries = {}
-        for k, v in ipairs(items) do
+        for _, v in ipairs(items) do
             table.insert(entries, v.insertText)
         end
         buffer = vim.api.nvim_create_buf(false, true)
         vim.api.nvim_buf_set_lines(buffer, 0, -1, false, entries)
+
 
         window = vim.api.nvim_open_win(buffer, false, {
             relative = "win",
@@ -127,21 +127,16 @@ return {
 
                         client.request("textDocument/completion", params, function(err, result)
                             if err then
-                                print("RIP")
+                                -- TODO: Add reporting here 
+                            elseif result then
+                                local items = result.items
+                                items = vim.tbl_filter(function(a) return a.score ~= nil end, items)
+                                table.sort(items, function(a, b) return a.score > b.score end)
+                                if #items > 0 then
+                                    vim.schedule(function() completion_listbox(items) end)
+                                end
                             end
-                            local items = result.items
-                            table.sort(items, function(a, b) return a.score > b.score end)
-                            vim.schedule(function() completion_listbox(items) end)
                         end)
-
-                        --local result = client.request_sync(
-                        --    "textDocument/completion",
-                        --    params,
-                        --    1000,
-                        --    0
-                        --).result
-
-
                     end
                 })
             end
