@@ -84,6 +84,7 @@ vim.cmd.colorscheme("tokyonight-night")
 local telescope = require("telescope.builtin")
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
 vim.keymap.set("n", "<leader>of", function() telescope.live_grep() end)
+vim.keymap.set("n", "<leader>ol", function() vim.lsp.buf.code_action() end)
 vim.keymap.set("n", "<C-c>", function() print("Skill issue") end)
 
 vim.api.nvim_create_autocmd({"BufWritePost"}, {
