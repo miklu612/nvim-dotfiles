@@ -1,49 +1,79 @@
 
 local window = -1
 local buffer = -1
+local has_selected = false
 
 local function inject_completion_controls(items)
     vim.keymap.set("i", "<Down>", function()
-        local cursor = vim.api.nvim_win_get_cursor(window)
-        cursor[1] = cursor[1] + 1
-        vim.api.nvim_win_set_cursor(window, cursor)
+        if has_selected then
+            local cursor = vim.api.nvim_win_get_cursor(window)
+            cursor[1] = cursor[1] + 1
+            vim.api.nvim_win_set_cursor(window, cursor)
+        else
+            has_selected = true
+        end
     end)
     vim.keymap.set("i", "<Up>", function()
-        local cursor = vim.api.nvim_win_get_cursor(window)
-        cursor[1] = cursor[1] - 1
-        vim.api.nvim_win_set_cursor(window, cursor)
+        if has_selected then
+            local cursor = vim.api.nvim_win_get_cursor(window)
+            cursor[1] = cursor[1] - 1
+            vim.api.nvim_win_set_cursor(window, cursor)
+        else
+            has_selected = true
+        end
     end)
     vim.keymap.set("i", "<Enter>", function()
-        local cursor = vim.api.nvim_win_get_cursor(window)
-        local index = cursor[1]
 
-        if window ~= -1 then
-            vim.api.nvim_win_close(window, true)
-            window = -1
+        if has_selected then
+            local cursor = vim.api.nvim_win_get_cursor(window)
+            local index = cursor[1]
+
+            if window ~= -1 then
+                vim.api.nvim_win_close(window, true)
+                window = -1
+            end
+
+            vim.api.nvim_buf_set_text(
+                0,
+                items[index].textEdit.range.start.line,
+                items[index].textEdit.range.start.character,
+                items[index].textEdit.range["end"].line,
+                items[index].textEdit.range["end"].character+1,
+                {items[index].textEdit.newText}
+            )
+
+            local text = items[index].textEdit.newText
+            local length = #text
+
+            cursor = vim.api.nvim_win_get_cursor(0)
+            cursor[2] = cursor[2] + length - items[index].textEdit.range["end"].character
+            vim.print(items[index])
+            vim.api.nvim_win_set_cursor(0, cursor)
+
+            vim.keymap.del("i", "<Enter>")
+            vim.keymap.del("i", "<Down>")
+            vim.keymap.del("i", "<Esc>")
+            vim.keymap.del("i", "<Up>")
+            vim.keymap.del("i", "<Space>")
+
+            has_selected = false
+
+        else
+
+            if window ~= -1 then
+                vim.api.nvim_win_close(window, true)
+                window = -1
+            end
+
+            vim.keymap.del("i", "<Enter>")
+            vim.keymap.del("i", "<Down>")
+            vim.keymap.del("i", "<Esc>")
+            vim.keymap.del("i", "<Up>")
+            vim.keymap.del("i", "<Space>")
+
+            local keys = vim.keycode("<Enter>")
+            vim.api.nvim_feedkeys(keys, "i", false)
         end
-
-        vim.api.nvim_buf_set_text(
-            0,
-            items[index].textEdit.range.start.line,
-            items[index].textEdit.range.start.character,
-            items[index].textEdit.range["end"].line,
-            items[index].textEdit.range["end"].character+1,
-            {items[index].textEdit.newText}
-        )
-
-        local text = items[index].textEdit.newText
-        local length = #text
-
-        cursor = vim.api.nvim_win_get_cursor(0)
-        cursor[2] = cursor[2] + length - items[index].textEdit.range["end"].character
-        vim.print(items[index])
-        vim.api.nvim_win_set_cursor(0, cursor)
-
-        vim.keymap.del("i", "<Enter>")
-        vim.keymap.del("i", "<Down>")
-        vim.keymap.del("i", "<Esc>")
-        vim.keymap.del("i", "<Up>")
-        vim.keymap.del("i", "<Space>")
 
     end)
     vim.keymap.set("i", "<Esc>", function()
