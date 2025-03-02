@@ -79,13 +79,20 @@ vim.opt.completeopt = "menu,noinsert"
 vim.g.mapleader     = " "
 vim.g.netrw_banner  = 0
 
-vim.cmd.colorscheme("tokyonight-night")
+vim.cmd.colorscheme("gruvbox")
 
 local telescope = require("telescope.builtin")
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
 vim.keymap.set("n", "<leader>of", function() telescope.live_grep() end)
 vim.keymap.set("n", "<leader>ol", function() vim.lsp.buf.code_action() end)
 vim.keymap.set("n", "<C-c>", function() print("Skill issue") end)
+
+vim.api.nvim_create_autocmd({"BufRead"}, {
+    pattern = {"*.f90"},
+    callback = function(ev)
+        vim.opt_local.shiftwidth = 2
+    end
+})
 
 vim.api.nvim_create_autocmd({"BufWritePost"}, {
     pattern = {"*.cpp", "*.hpp"},
