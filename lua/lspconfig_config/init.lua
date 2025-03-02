@@ -13,6 +13,7 @@ local function inject_completion_controls(items)
             has_selected = true
         end
     end)
+
     vim.keymap.set("i", "<Up>", function()
         if has_selected then
             local cursor = vim.api.nvim_win_get_cursor(window)
@@ -22,6 +23,7 @@ local function inject_completion_controls(items)
             has_selected = true
         end
     end)
+
     vim.keymap.set("i", "<Enter>", function()
 
         if has_selected then
@@ -127,13 +129,27 @@ local function completion_listbox(items)
         buffer = vim.api.nvim_create_buf(false, true)
         vim.api.nvim_buf_set_lines(buffer, 0, -1, false, entries)
 
+        local position = vim.api.nvim_win_get_cursor(0)
+        position = vim.fn.screenpos(0, position[1], position[2])
+        position.row = position.row + 1
+
+        local height = vim.api.nvim_win_get_height(0)
+        local hideri_height = math.min(
+            height - position.row,
+            20
+        )
+
+        if hideri_height <= 0 then
+            print("Hideri height: " .. tostring(hideri_height))
+            return
+        end
 
         window = vim.api.nvim_open_win(buffer, false, {
             relative = "win",
-            row = vim.fn.line("."),
+            row = position.row;
             col = vim.fn.col("."),
             width = 50,
-            height = 20,
+            height = hideri_height,
             title = "Hideri",
             border = "single"
         })
@@ -189,10 +205,12 @@ return {
                                 -- TODO: Add reporting here 
                             elseif result then
                                 local items = result.items
-                                items = vim.tbl_filter(function(a) return a.score ~= nil end, items)
-                                table.sort(items, function(a, b) return a.score > b.score end)
-                                if #items > 0 then
-                                    vim.schedule(function() completion_listbox(items) end)
+                                if items then
+                                    items = vim.tbl_filter(function(a) return a.score ~= nil end, items)
+                                    table.sort(items, function(a, b) return a.score > b.score end)
+                                    if #items > 0 then
+                                        vim.schedule(function() completion_listbox(items) end)
+                                    end
                                 end
                             end
                         end)
@@ -210,6 +228,19 @@ return {
                 settings = {
                     cmd = {
                         "clangd",
+                    }
+                },
+            })
+        end
+        if vim.fn.executable("fortls") == 1 then
+            require("lspconfig").fortls.setup({
+                settings = {
+                    cmd = {
+                        'fortls',
+                        '--lowercase_intrinsics',
+                        '--hover_signature',
+                        '--hover_language=fortran',
+                        '--use_signature_help',
                     }
                 },
             })
