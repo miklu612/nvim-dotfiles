@@ -7,8 +7,11 @@ local function inject_completion_controls(items)
     vim.keymap.set("i", "<Down>", function()
         if has_selected then
             local cursor = vim.api.nvim_win_get_cursor(window)
+            local line_count = vim.api.nvim_buf_line_count(buffer)
             cursor[1] = cursor[1] + 1
-            vim.api.nvim_win_set_cursor(window, cursor)
+            if cursor[1] < line_count then
+                vim.api.nvim_win_set_cursor(window, cursor)
+            end
         else
             has_selected = true
         end
@@ -18,7 +21,9 @@ local function inject_completion_controls(items)
         if has_selected then
             local cursor = vim.api.nvim_win_get_cursor(window)
             cursor[1] = cursor[1] - 1
-            vim.api.nvim_win_set_cursor(window, cursor)
+            if cursor[1] >= 1 then
+                vim.api.nvim_win_set_cursor(window, cursor)
+            end
         else
             has_selected = true
         end
