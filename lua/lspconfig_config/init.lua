@@ -14,6 +14,11 @@ local function remove_completion_controls()
     has_injected = false
 end
 
+local function enable_selection()
+    has_selected = true
+    vim.api.nvim_set_option_value("cursorline", true, {win = window})
+end
+
 local function inject_completion_controls(items)
     if has_injected then
         remove_completion_controls()
@@ -28,7 +33,7 @@ local function inject_completion_controls(items)
                 vim.api.nvim_win_set_cursor(window, cursor)
             end
         else
-            has_selected = true
+            enable_selection()
         end
     end)
 
@@ -40,7 +45,7 @@ local function inject_completion_controls(items)
                 vim.api.nvim_win_set_cursor(window, cursor)
             end
         else
-            has_selected = true
+            enable_selection()
         end
     end)
 
@@ -165,6 +170,7 @@ local function completion_listbox(items)
         })
         vim.api.nvim_set_option_value("number", false, {win = window})
         vim.api.nvim_set_option_value("signcolumn", "no", {win = window})
+        vim.api.nvim_set_option_value("cursorline", false, {win = window})
         inject_completion_controls(items)
     end
 
