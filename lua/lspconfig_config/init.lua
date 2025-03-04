@@ -7,6 +7,7 @@ local select_key = "<Tab>"
 
 local function remove_completion_controls()
     vim.keymap.del("i", select_key)
+    vim.keymap.del("i", "<Enter>")
     vim.keymap.del("i", "<Down>")
     vim.keymap.del("i", "<Esc>")
     vim.keymap.del("i", "<Up>")
@@ -95,6 +96,7 @@ local function inject_completion_controls(items)
         end
 
     end)
+
     vim.keymap.set("i", "<Esc>", function()
         if window ~= -1 then
             vim.api.nvim_win_close(window, true)
@@ -107,6 +109,20 @@ local function inject_completion_controls(items)
         vim.api.nvim_feedkeys(keys, "i", false)
 
     end)
+
+    vim.keymap.set("i", "<Enter>", function()
+        if window ~= -1 then
+            vim.api.nvim_win_close(window, true)
+            window = -1
+        end
+
+        remove_completion_controls()
+
+        local keys = vim.keycode("<Enter>")
+        vim.api.nvim_feedkeys(keys, "i", false)
+
+    end)
+
     vim.keymap.set("i", "<Space>", function()
         if window ~= -1 then
             vim.api.nvim_win_close(window, true)
