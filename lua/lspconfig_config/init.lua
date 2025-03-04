@@ -13,6 +13,8 @@ local function remove_completion_controls()
         vim.keymap.del("i", "<Esc>")
         vim.keymap.del("i", "<Up>")
         vim.keymap.del("i", "<Space>")
+        vim.keymap.del("i", "<BS>")
+        vim.keymap.del("i", ":")
         has_injected = false
     end
 end
@@ -109,6 +111,7 @@ local function inject_completion_controls(items)
         end
 
         remove_completion_controls()
+        has_selected = false
 
         local keys = vim.keycode("<Esc>")
         vim.api.nvim_feedkeys(keys, "i", false)
@@ -122,6 +125,7 @@ local function inject_completion_controls(items)
         end
 
         remove_completion_controls()
+        has_selected = false
 
         local keys = vim.keycode("<Enter>")
         vim.api.nvim_feedkeys(keys, "i", false)
@@ -133,15 +137,38 @@ local function inject_completion_controls(items)
             vim.api.nvim_win_close(window, true)
             window = -1
         end
-        vim.keymap.del("i", select_key)
-        vim.keymap.del("i", "<Down>")
-        vim.keymap.del("i", "<Esc>")
-        vim.keymap.del("i", "<Up>")
-        vim.keymap.del("i", "<Space>")
+
+        remove_completion_controls()
+        has_selected = false
 
         local keys = vim.keycode("<Space>")
         vim.api.nvim_feedkeys(keys, "i", false)
+    end)
 
+    vim.keymap.set("i", "<BS>", function()
+        if window ~= -1 then
+            vim.api.nvim_win_close(window, true)
+            window = -1
+        end
+
+        remove_completion_controls()
+        has_selected = false
+
+        local keys = vim.keycode("<BS>")
+        vim.api.nvim_feedkeys(keys, "i", false)
+    end)
+
+    vim.keymap.set("i", ":", function()
+        if window ~= -1 then
+            vim.api.nvim_win_close(window, true)
+            window = -1
+        end
+
+        remove_completion_controls()
+        has_selected = false
+
+        local keys = vim.keycode(":")
+        vim.api.nvim_feedkeys(keys, "i", false)
     end)
 end
 
@@ -167,11 +194,11 @@ local function completion_listbox(items)
 
         local position = vim.api.nvim_win_get_cursor(0)
         position = vim.fn.screenpos(0, position[1], position[2])
-        position.row = position.row + 1
+        position.row = position.row
 
         local height = vim.api.nvim_win_get_height(0)
         local hideri_height = math.min(
-            height - position.row,
+            height - position.row - 1,
             20
         )
 
@@ -221,7 +248,7 @@ return {
                             '"', "'", "+", "-", "=", "*",
                             "/", "!", "<", "?", ">", "\\",
                             "[", "]", "&", "%", "$", "#",
-                            "@" }
+                            "@", ":" }
                         if vim.list_contains(invalid_keys, vim.v.char) then
                             return
                         end
@@ -245,7 +272,7 @@ return {
                                 local items = result.items
                                 if items then
                                     items = vim.tbl_filter(function(a) return a.score ~= nil end, items)
-                                    table.sort(items, function(a, b) return a.score < b.score end)
+                                    table.sort(items, function(a, b) return a.score > b.score end)
                                     if #items > 0 then
                                         vim.schedule(function() completion_listbox(items) end)
                                     end
