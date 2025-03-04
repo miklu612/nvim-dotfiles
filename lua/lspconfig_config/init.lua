@@ -6,13 +6,15 @@ local has_injected = false
 local select_key = "<Tab>"
 
 local function remove_completion_controls()
-    vim.keymap.del("i", select_key)
-    vim.keymap.del("i", "<Enter>")
-    vim.keymap.del("i", "<Down>")
-    vim.keymap.del("i", "<Esc>")
-    vim.keymap.del("i", "<Up>")
-    vim.keymap.del("i", "<Space>")
-    has_injected = false
+    if has_injected then
+        vim.keymap.del("i", select_key)
+        vim.keymap.del("i", "<Enter>")
+        vim.keymap.del("i", "<Down>")
+        vim.keymap.del("i", "<Esc>")
+        vim.keymap.del("i", "<Up>")
+        vim.keymap.del("i", "<Space>")
+        has_injected = false
+    end
 end
 
 local function enable_selection()
@@ -71,10 +73,13 @@ local function inject_completion_controls(items)
             )
 
             local text = items[index].textEdit.newText
-            local length = #text
+            local delta = items[index].textEdit.range["end"].character - items[index].textEdit.range.start.character
+            delta = delta + 1
+
+            local new_position_delta = #text - delta
 
             cursor = vim.api.nvim_win_get_cursor(0)
-            cursor[2] = cursor[2] + length - items[index].textEdit.range["end"].character
+            cursor[2] = cursor[2] + new_position_delta
             vim.print(items[index])
             vim.api.nvim_win_set_cursor(0, cursor)
 
