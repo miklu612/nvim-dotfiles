@@ -24,6 +24,11 @@ local function enable_selection()
     vim.api.nvim_set_option_value("cursorline", true, {win = window})
 end
 
+local function close_window()
+    vim.api.nvim_win_close(window, true)
+    window = -1
+end
+
 local function inject_completion_controls(items)
     if has_injected then
         remove_completion_controls()
@@ -61,8 +66,7 @@ local function inject_completion_controls(items)
             local index = cursor[1]
 
             if window ~= -1 then
-                vim.api.nvim_win_close(window, true)
-                window = -1
+                close_window()
             end
 
             vim.api.nvim_buf_set_text(
@@ -92,8 +96,7 @@ local function inject_completion_controls(items)
         else
 
             if window ~= -1 then
-                vim.api.nvim_win_close(window, true)
-                window = -1
+                close_window()
             end
 
             remove_completion_controls()
@@ -106,8 +109,7 @@ local function inject_completion_controls(items)
 
     vim.keymap.set("i", "<Esc>", function()
         if window ~= -1 then
-            vim.api.nvim_win_close(window, true)
-            window = -1
+            close_window()
         end
 
         remove_completion_controls()
@@ -120,8 +122,7 @@ local function inject_completion_controls(items)
 
     vim.keymap.set("i", "<Enter>", function()
         if window ~= -1 then
-            vim.api.nvim_win_close(window, true)
-            window = -1
+            close_window()
         end
 
         remove_completion_controls()
@@ -134,8 +135,7 @@ local function inject_completion_controls(items)
 
     vim.keymap.set("i", "<Space>", function()
         if window ~= -1 then
-            vim.api.nvim_win_close(window, true)
-            window = -1
+            close_window()
         end
 
         remove_completion_controls()
@@ -147,8 +147,7 @@ local function inject_completion_controls(items)
 
     vim.keymap.set("i", "<BS>", function()
         if window ~= -1 then
-            vim.api.nvim_win_close(window, true)
-            window = -1
+            close_window()
         end
 
         remove_completion_controls()
@@ -160,8 +159,7 @@ local function inject_completion_controls(items)
 
     vim.keymap.set("i", ":", function()
         if window ~= -1 then
-            vim.api.nvim_win_close(window, true)
-            window = -1
+            close_window()
         end
 
         remove_completion_controls()
@@ -173,6 +171,10 @@ local function inject_completion_controls(items)
 end
 
 local function completion_listbox(items)
+
+    if vim.fn.mode() ~= "i" then
+        return
+    end
 
     if window ~= -1 then
         local entries = {}
@@ -248,7 +250,9 @@ return {
                             '"', "'", "+", "-", "=", "*",
                             "/", "!", "<", "?", ">", "\\",
                             "[", "]", "&", "%", "$", "#",
-                            "@", ":" }
+                            "@", ":", "0", "1", "2", "3",
+                            "4", "5", "6", "7", "8", "9",
+                            "." }
                         if vim.list_contains(invalid_keys, vim.v.char) then
                             return
                         end
