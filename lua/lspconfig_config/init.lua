@@ -1,15 +1,30 @@
-
 local window = -1
 local buffer = -1
 local has_selected = false
+local has_injected = false
+
+local select_key = "<Tab>"
+
+local function remove_completion_controls()
+    vim.keymap.del("i", select_key)
+    vim.keymap.del("i", "<Down>")
+    vim.keymap.del("i", "<Esc>")
+    vim.keymap.del("i", "<Up>")
+    vim.keymap.del("i", "<Space>")
+    has_injected = false
+end
 
 local function inject_completion_controls(items)
+    if has_injected then
+        remove_completion_controls()
+    end
+    has_injected = true
     vim.keymap.set("i", "<Down>", function()
         if has_selected then
             local cursor = vim.api.nvim_win_get_cursor(window)
             local line_count = vim.api.nvim_buf_line_count(buffer)
             cursor[1] = cursor[1] + 1
-            if cursor[1] < line_count then
+            if cursor[1] <= line_count then
                 vim.api.nvim_win_set_cursor(window, cursor)
             end
         else
@@ -29,7 +44,7 @@ local function inject_completion_controls(items)
         end
     end)
 
-    vim.keymap.set("i", "<Enter>", function()
+    vim.keymap.set("i", select_key, function()
 
         if has_selected then
             local cursor = vim.api.nvim_win_get_cursor(window)
@@ -57,11 +72,7 @@ local function inject_completion_controls(items)
             vim.print(items[index])
             vim.api.nvim_win_set_cursor(0, cursor)
 
-            vim.keymap.del("i", "<Enter>")
-            vim.keymap.del("i", "<Down>")
-            vim.keymap.del("i", "<Esc>")
-            vim.keymap.del("i", "<Up>")
-            vim.keymap.del("i", "<Space>")
+            remove_completion_controls()
 
             has_selected = false
 
@@ -72,11 +83,7 @@ local function inject_completion_controls(items)
                 window = -1
             end
 
-            vim.keymap.del("i", "<Enter>")
-            vim.keymap.del("i", "<Down>")
-            vim.keymap.del("i", "<Esc>")
-            vim.keymap.del("i", "<Up>")
-            vim.keymap.del("i", "<Space>")
+            remove_completion_controls()
 
             local keys = vim.keycode("<Enter>")
             vim.api.nvim_feedkeys(keys, "i", false)
@@ -88,11 +95,8 @@ local function inject_completion_controls(items)
             vim.api.nvim_win_close(window, true)
             window = -1
         end
-        vim.keymap.del("i", "<Enter>")
-        vim.keymap.del("i", "<Down>")
-        vim.keymap.del("i", "<Esc>")
-        vim.keymap.del("i", "<Up>")
-        vim.keymap.del("i", "<Space>")
+
+        remove_completion_controls()
 
         local keys = vim.keycode("<Esc>")
         vim.api.nvim_feedkeys(keys, "i", false)
@@ -103,7 +107,7 @@ local function inject_completion_controls(items)
             vim.api.nvim_win_close(window, true)
             window = -1
         end
-        vim.keymap.del("i", "<Enter>")
+        vim.keymap.del("i", select_key)
         vim.keymap.del("i", "<Down>")
         vim.keymap.del("i", "<Esc>")
         vim.keymap.del("i", "<Up>")
@@ -123,6 +127,7 @@ local function completion_listbox(items)
             table.insert(entries, v.insertText)
         end
         vim.api.nvim_buf_set_lines(buffer, 0, -1, false, entries)
+        inject_completion_controls(items)
     else
 
         buffer = vim.api.nvim_create_buf(false, true)
@@ -160,9 +165,9 @@ local function completion_listbox(items)
         })
         vim.api.nvim_set_option_value("number", false, {win = window})
         vim.api.nvim_set_option_value("signcolumn", "no", {win = window})
+        inject_completion_controls(items)
     end
 
-    inject_completion_controls(items)
 
 end
 
@@ -178,6 +183,7 @@ return {
                 vim.api.nvim_create_autocmd("InsertCharPre", {
                     buffer = vim.api.nvim_get_current_buf(),
                     callback = function()
+
                         if vim.fn.pumvisible() == 1 or vim.fn.state("m") == "m" then
                             return
                         end
@@ -207,27 +213,31 @@ return {
 
                         client.request("textDocument/completion", params, function(err, result)
                             if err then
-                                -- TODO: Add reporting here 
+                                vim.print("(HIDERI) Error: ", err)
                             elseif result then
                                 local items = result.items
                                 if items then
                                     items = vim.tbl_filter(function(a) return a.score ~= nil end, items)
-                                    table.sort(items, function(a, b) return a.score > b.score end)
+                                    table.sort(items, function(a, b) return a.score < b.score end)
                                     if #items > 0 then
                                         vim.schedule(function() completion_listbox(items) end)
                                     end
+                                else
+                                    vim.print("(HIDERI) No items in: ", result)
                                 end
+                            else
+                                vim.print("(HIDERI) No results")
                             end
                         end)
                     end
                 })
             end
         })
-        require("lspconfig").rust_analyzer.setup({
-            settings = {
-                ['rust-analyzer'] = {}
-            },
-        })
+        --require("lspconfig").rust_analyzer.setup({
+        --    settings = {
+        --        ['rust-analyzer'] = {}
+        --    },
+        --})
         if vim.fn.executable("clangd") == 1 then
             require("lspconfig").clangd.setup({
                 settings = {
