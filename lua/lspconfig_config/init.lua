@@ -86,7 +86,6 @@ local function inject_completion_controls(items)
 
             cursor = vim.api.nvim_win_get_cursor(0)
             cursor[2] = cursor[2] + new_position_delta
-            vim.print(items[index])
             vim.api.nvim_win_set_cursor(0, cursor)
 
             remove_completion_controls()
