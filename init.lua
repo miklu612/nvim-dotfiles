@@ -99,7 +99,7 @@ vim.api.nvim_create_autocmd({"BufRead"}, {
 })
 
 vim.api.nvim_create_autocmd({"BufWritePost"}, {
-    pattern = {"*.cpp", "*.hpp"},
+    pattern = {"*.cpp", "*.hpp", "*.c", "*.h"},
     callback = function(ev)
         local view = vim.fn.winsaveview()
         vim.system({"clang-format", "-i", ev.match}):wait()
