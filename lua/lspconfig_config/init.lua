@@ -172,6 +172,9 @@ end
 local function completion_listbox(items)
 
     if vim.fn.mode() ~= "i" then
+        if window ~= -1 then
+            close_window()
+        end
         return
     end
 
