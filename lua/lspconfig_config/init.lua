@@ -293,11 +293,13 @@ return {
                 })
             end
         })
-        --require("lspconfig").rust_analyzer.setup({
-        --    settings = {
-        --        ['rust-analyzer'] = {}
-        --    },
-        --})
+        if vim.fn.executable("rust-analyzer") == 1 then
+            require("lspconfig").rust_analyzer.setup({
+                settings = {
+                    ['rust-analyzer'] = {}
+                },
+            })
+        end
         if vim.fn.executable("clangd") == 1 then
             require("lspconfig").clangd.setup({
                 settings = {
