@@ -260,35 +260,35 @@ return {
                         end
 
                         local client = vim.lsp.get_client_by_id(args.data.client_id)
-                        assert(client ~= nil)
 
+                        if client ~= nil then
+                            -- I am too tired of trying to figure out Neovim's
+                            -- completion system, so I will just rewrite it how I
+                            -- want to be.
+                            local params = vim.lsp.util.make_position_params()
+                            params.context = {
+                                triggerKind = 1
+                            }
 
-                        -- I am too tired of trying to figure out Neovim's
-                        -- completion system, so I will just rewrite it how I
-                        -- want to be.
-                        local params = vim.lsp.util.make_position_params()
-                        params.context = {
-                            triggerKind = 1
-                        }
-
-                        client.request("textDocument/completion", params, function(err, result)
-                            if err then
-                                vim.print("(HIDERI) Error: ", err)
-                            elseif result then
-                                local items = result.items
-                                if items then
-                                    items = vim.tbl_filter(function(a) return a.score ~= nil end, items)
-                                    table.sort(items, function(a, b) return a.score > b.score end)
-                                    if #items > 0 then
-                                        vim.schedule(function() completion_listbox(items) end)
+                            client.request("textDocument/completion", params, function(err, result)
+                                if err then
+                                    vim.print("(HIDERI) Error: ", err)
+                                elseif result then
+                                    local items = result.items
+                                    if items then
+                                        items = vim.tbl_filter(function(a) return a.score ~= nil end, items)
+                                        table.sort(items, function(a, b) return a.score > b.score end)
+                                        if #items > 0 then
+                                            vim.schedule(function() completion_listbox(items) end)
+                                        end
+                                    else
+                                        vim.print("(HIDERI) No items in: ", result)
                                     end
                                 else
-                                    vim.print("(HIDERI) No items in: ", result)
+                                    vim.print("(HIDERI) No results")
                                 end
-                            else
-                                vim.print("(HIDERI) No results")
-                            end
-                        end)
+                            end)
+                        end
                     end
                 })
             end
