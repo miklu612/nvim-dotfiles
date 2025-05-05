@@ -64,6 +64,14 @@ require("lazy").setup({
             'nvim-lua/plenary.nvim'
         }
     },
+    {
+        "NeogitOrg/neogit",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "sindrets/diffview.nvim",
+            "nvim-telescope/telescope.nvim",
+        }
+    }
 })
 
 -- My options
@@ -82,11 +90,13 @@ vim.g.netrw_banner  = 0
 vim.cmd.colorscheme("gruvbox")
 
 local telescope = require("telescope.builtin")
+local neogit = require("neogit")
 
 vim.keymap.set("n", "<leader>op", function() vim.cmd(":Explore") end)
 vim.keymap.set("n", "<leader>of", function() telescope.live_grep() end)
 vim.keymap.set("n", "<leader>ol", function() vim.lsp.buf.code_action() end)
 vim.keymap.set("n", "<leader>ot", function() vim.cmd(":terminal") end)
+vim.keymap.set("n", "<leader>og", neogit.open)
 vim.keymap.set("n", "<C-c>", function() print("Skill issue") end)
 
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
