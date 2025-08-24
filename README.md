@@ -9,7 +9,7 @@ according to my own needs and not anyone else's.
 I am not sure which version is needed for each, but picking the latest stable
 release is the best bet.
 
-- rust analyzer
+- rust analyzer (optional)
 - clangd (optional)
 - lua ls (optional)
 - Neovim 0.10.1 or over
