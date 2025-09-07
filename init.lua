@@ -63,6 +63,8 @@ require("lazy").setup({
     },
 })
 
+local formatting_enabled = true
+
 -- My options
 vim.opt.expandtab   = true
 vim.opt.shiftwidth  = 4
@@ -85,8 +87,15 @@ vim.keymap.set("n", "<leader>of", function() telescope.live_grep() end)
 vim.keymap.set("n", "<leader>ol", function() vim.lsp.buf.code_action() end)
 vim.keymap.set("n", "<leader>ot", function() vim.cmd(":terminal") end)
 vim.keymap.set("n", "<C-c>", function() print("Skill issue") end)
-
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
+
+vim.api.nvim_create_user_command("DisableFormatting", function()
+    formatting_enabled = false
+end, {})
+
+vim.api.nvim_create_user_command("EnableFormatting", function()
+    formatting_enabled = true
+end, {})
 
 vim.api.nvim_create_autocmd({"BufRead"}, {
     pattern = {"*.f90"},
@@ -98,10 +107,12 @@ vim.api.nvim_create_autocmd({"BufRead"}, {
 vim.api.nvim_create_autocmd({"BufWritePost"}, {
     pattern = {"*.cpp", "*.hpp", "*.c", "*.h"},
     callback = function(ev)
-        local view = vim.fn.winsaveview()
-        vim.system({"clang-format", "-i", ev.match}):wait()
-        vim.cmd(":e!")
-        vim.fn.winrestview(view)
+        if formatting_enabled then
+            local view = vim.fn.winsaveview()
+            vim.system({"clang-format", "-i", ev.match}):wait()
+            vim.cmd(":e!")
+            vim.fn.winrestview(view)
+        end
     end
 })
 
