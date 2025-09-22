@@ -24,36 +24,32 @@ return {
             end
         })
         if vim.fn.executable("rust-analyzer") == 1 then
-            require("lspconfig").rust_analyzer.setup({
-                settings = {
+            vim.lsp.config.rust_analyzer = {
                     ['rust-analyzer'] = {}
-                },
-            })
+            }
+            vim.lsp.enable("rust-analyzer")
         end
         if vim.fn.executable("clangd") == 1 then
-            require("lspconfig").clangd.setup({
-                settings = {
-                    cmd = {
-                        "clangd",
-                    }
+            vim.lsp.config.clangd = {
+                cmd = {
+                    "clangd",
                 },
-            })
+            }
+            vim.lsp.enable("clangd")
         end
         if vim.fn.executable("fortls") == 1 then
-            require("lspconfig").fortls.setup({
-                settings = {
-                    cmd = {
-                        'fortls',
-                        '--lowercase_intrinsics',
-                        '--hover_signature',
-                        '--hover_language=fortran',
-                        '--use_signature_help',
-                    }
-                },
-            })
+            vim.lsp.config.fortls = {
+                cmd = {
+                    'fortls',
+                    '--lowercase_intrinsics',
+                    '--hover_signature',
+                    '--hover_language=fortran',
+                    '--use_signature_help',
+                }
+            }
         end
         if vim.fn.executable("lua-language-server") == 1 then
-            require("lspconfig").lua_ls.setup({
+            vim.lsp.config.lua_ls = {
                 on_init = function(client)
                     client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
                         runtime = {
@@ -67,10 +63,8 @@ return {
                         }
                     })
                 end,
-                settings = {
-                    Lua = {}
-                }
-            })
+                Lua = {}
+            }
         end
     end
 }
