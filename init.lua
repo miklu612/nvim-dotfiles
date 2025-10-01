@@ -37,6 +37,7 @@ require("lazy").setup({
                 "typescript",
                 "lua",
                 "vimdoc",
+                "markdown"
             },
             highlight = {
                 enable = true,
