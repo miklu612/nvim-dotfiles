@@ -54,7 +54,6 @@ require("lazy").setup({
             require("alpha").setup(require("startup.screen").config)
         end
     },
-    require("lspconfig_config"),
     {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.8',
@@ -128,3 +127,4 @@ vim.api.nvim_create_autocmd({"BufWritePost"}, {
     end
 })
 
+require("lspconfig_config")
