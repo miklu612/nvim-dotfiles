@@ -12,4 +12,4 @@ release is the best bet.
 - rust analyzer (optional)
 - clangd (optional)
 - lua ls (optional)
-- Neovim 0.10.1 or over
+- Neovim 0.11 or over
