@@ -105,14 +105,15 @@ vim.api.nvim_create_autocmd({"BufRead"}, {
     end
 })
 
-vim.api.nvim_create_autocmd({"BufWritePost"}, {
+vim.api.nvim_create_autocmd({"BufWritePre"}, {
     pattern = {"*.cpp", "*.hpp", "*.c", "*.h"},
     callback = function(ev)
         if formatting_enabled then
-            local view = vim.fn.winsaveview()
-            vim.system({"clang-format", "-i", ev.match}):wait()
-            vim.cmd(":e!")
-            vim.fn.winrestview(view)
+            local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
+            local text = table.concat(lines, "\n")
+            local output = vim.system({"clang-format"}, {stdin=text}):wait()
+            lines = vim.split(output.stdout, "\n")
+            vim.api.nvim_buf_set_lines(0, 0, -1, true, lines)
         end
     end
 })
